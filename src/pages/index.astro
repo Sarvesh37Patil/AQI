@@ -100,51 +100,51 @@ const nh3Object = {
 }
 
 const aqiResponse =
-  aqi === "1"
+  aqi === 1
     ? "Good"
-    : aqi === "2"
+    : aqi === 2
     ? "Fair"
-    : aqi === "3"
+    : aqi === 3
     ? "Moderate"
-    : aqi === "4"
+    : aqi === 4
     ? "Poor"
     : "Severe";
 
   const aqiLevels =
-  aqi === "1"
+  aqi === 1
     ? "0–50"
-    : aqi === "2"
+    : aqi === 2
     ? "51–100"
-    : aqi === "3"
+    : aqi === 3
     ? "101–150"
-    : aqi === "4"
+    : aqi === 4
     ? "151–200"
     : "201–300";
 
     const aqiDesc =
-  aqi === "1"
+  aqi === 1
     ? `Air quality is satisfactory,
      and air pollution poses little or no risk.`
-    : aqi === "2"
+    : aqi === 2
     ? `Air quality is acceptable. However,
      there may be a risk for some people,
      particularly those who are unusually sensitive to air pollution.`
-    : aqi === "3"
+    : aqi === 3
     ? `Members of sensitive groups may experience health effects.
      The general public is less likely to be affected.`
-    : aqi === "4"
+    : aqi === 4
     ? `Some members of the general public may experience health effects;
      members of sensitive groups may experience more serious health effects.`
     : `Health alert: The risk of health effects is increased for everyone.`;
 
 const aqiColor =
-  aqi === "1"
+  aqi === 1
     ? "bg-good"
-    : aqi === "2"
+    : aqi === 2
     ? "bg-fair"
-    : aqi === "3"
+    : aqi === 3
     ? "bg-moderate"
-    : aqi === "4"
+    : aqi === 4
     ? "bg-poor"
     : "bg-bad";
 ---
