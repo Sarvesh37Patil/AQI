@@ -22,11 +22,13 @@ const lat = locationData.location.latitude;
 const lon = locationData.location.longitude;
 
 const OpenWeatherAPI = await fetch(
-  `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+  `http://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
 );
 const weatherData = await OpenWeatherAPI.json();
 const aqi = weatherData.list[0].main.aqi;
 const aqiComp = weatherData.list[0].components
+const aqiCompTmrw = weatherData.list[1].components
+
 
 let {
   "co": co,
@@ -34,10 +36,68 @@ let {
   "no2": no2,
   "o3": o3,
   "so2": so2,
-  "pm2.5":pm2_5,
-  "pm10":pm10,
+  "pm2_5":pm2_5,
   "nh3":nh3
 } = aqiComp
+
+let {
+  "co": co_nxt,
+  "no": no_nxt,
+  "no2": no2_nxt,
+  "o3": o3_nxt,
+  "so2": so2_nxt,
+  "pm2_5":pm2_5_nxt,
+  "nh3":nh3_nxt
+} = aqiCompTmrw
+
+const coObject = {
+  "status": co >= 0 && co <= 5 ? "Good" : co >= 5 && co <= 10 ? "Fair" : co >= 10 && co <= 35 ? "Moderate" : co >= 35 && co <= 60 ? "Poor" : "Severe",
+  "status_nxt": co_nxt >= 0 && co_nxt <= 5 ? "Good" : co_nxt >= 5 && co_nxt <= 10 ? "Fair" : co_nxt >= 10 && co_nxt <= 35 ? "Moderate" : co_nxt >= 35 && co_nxt <= 60 ? "Poor" : "Severe",
+  "color": co >= 0 && co <= 5 ? "bg-good" : co >= 5 && co <= 10 ? "bg-fair" : co >= 10 && co <= 35 ? "bg-moderate" : co >= 35 && co <= 60 ? "bg-poor" : "bg-bad",
+  "color_nxt": co_nxt >= 0 && co_nxt <= 5 ? "bg-good" : co_nxt >= 5 && co_nxt <= 10 ? "bg-fair": co_nxt >= 15 && co_nxt <= 35 ? "bg-moderate" : co_nxt >= 35 && co_nxt <= 60 ? "bg-poor" : "bg-bad",
+}
+
+const noObject = {
+  "status": no >= 0 && no <= 40 ? "Good" : no >= 40 && no <= 80 ? "Fair" : no >= 80 && no <= 180 ? "Moderate" : no >= 180 && no <= 280 ? "Poor" : "Severe",
+  "status_nxt": no_nxt >= 0 && no_nxt <=40 ? "Good" : no_nxt >= 40 && no_nxt <= 80 ? "Fair" : no_nxt >= 80 && no_nxt <= 180 ? "Moderate" : no_nxt >= 180 && no_nxt <= 280 ? "Poor" : "Severe",
+  "color": no >= 0 && no <= 40 ? "bg-good" : no >=40 && no <= 80 ? "bg-fair" : no >= 80 && no <= 180 ? "bg-moderate" : no >= 180 && no <= 280 ? "bg-poor" : "bg-bad",
+  "color_nxt": no_nxt >= 0 && no_nxt <= 40 ? "bg-good" : no_nxt >= 40 && no_nxt <= 80 ? "bg-fair" : no_nxt >= 80 && no_nxt <= 180 ? "bg-moderate" : no_nxt >= 180 && no_nxt <= 280 ? "bg-poor" : "bg-bad",
+}
+
+const no2Object = {
+  "status": no2 >= 0 && no2 <= 40 ? "Good" : no2 >= 40 && no2 <= 80 ? "Fair" : no2 >= 80 && no2 <= 180 ? "Moderate" : no2 >= 180 && no2 <= 280 ? "Poor" : "Severe",
+  "status_nxt": no2_nxt >= 0 && no2_nxt <=40 ? "Good" : no2_nxt >= 40 && no2_nxt <= 80 ? "Fair" : no2_nxt >= 80 && no2_nxt <= 180 ? "Moderate" : no2_nxt >= 180 && no2_nxt <= 280 ? "Poor" : "Severe",
+  "color": no2 >= 0 && no2 <= 40 ? "bg-good" : no2 >=40 && no2 <= 80 ? "bg-fair" : no2 >= 80 && no2 <= 180 ? "bg-moderate" : no2 >= 180 && no2 <= 280 ? "bg-poor" : "bg-bad",
+  "color_nxt": no2_nxt >= 0 && no2_nxt <= 40 ? "bg-good" : no2_nxt >= 40 && no2_nxt <= 80 ? "bg-fair" : no2_nxt >= 80 && no2_nxt <= 180 ? "bg-moderate" : no2_nxt >= 180 && no2_nxt <= 280 ? "bg-poor" : "bg-bad",
+}
+
+const o3Object = {
+  "status": o3 >= 0 && o3 <= 100 ? "Good" : o3 >= 100 && o3 <= 200 ? "Fair" : o3 >= 200 && o3 <= 300 ? "Moderate" : o3 >= 300 && o3 <= 400 ? "Poor" : "Severe",
+  "status_nxt": o3_nxt >= 0 && o3_nxt <= 100 ? "Good" : o3_nxt >= 100 && o3_nxt <= 200 ? "Fair" : o3_nxt >= 200 && o3_nxt <= 300 ? "Moderate" : o3_nxt >= 300 && o3_nxt <= 400 ? "Poor" : "Severe",
+  "color": o3 >= 0 && o3 <= 100 ? "bg-good" : o3 >= 100 && o3 <= 200 ? "bg-fair" : o3 >= 200 && o3 <= 300 ? "bg-moderate" : o3 >= 300 && o3 <= 400 ? "bg-poor" : "bg-bad",
+  "color_nxt": o3_nxt >= 0 && o3_nxt <= 100 ? "bg-good" : o3_nxt >= 100 && o3_nxt <= 200 ? "bg-fair" : o3_nxt >= 200 && o3_nxt <= 300 ? "bg-moderate" : o3_nxt >= 300 && o3_nxt <= 400 ? "bg-poor" : "bg-bad",
+}
+
+const so2Object = {
+  "status": so2 >= 0 && so2 <= 50 ? "Good" : so2 >= 50 && so2 <= 150 ? "Fair" : so2 >= 150 && so2 <= 475 ? "Moderate" : so2 >= 475 && so2 <= 800 ? "Poor" : "Severe",
+  "status_nxt": so2_nxt >= 0 && so2_nxt <= 50 ? "Good" : so2_nxt >= 50 && so2_nxt <= 150 ? "Fair" : so2_nxt >= 150 && so2_nxt <= 475 ? "Moderate" : so2_nxt >= 475 && so2_nxt <= 800 ? "Poor" : "Severe",
+  "color": so2 >= 0 && so2 <= 50 ? "bg-good" : so2 >= 50 && so2 <= 150 ? "bg-fair" : so2 >= 150 && so2 <= 475 ? "bg-moderate" : so2 >= 475 && so2 <= 800 ? "bg-poor" : "bg-bad",
+  "color_nxt": so2_nxt >= 0 && so2_nxt <= 50 ? "bg-good" : so2_nxt >= 50 && so2_nxt <= 150 ? "bg-fair" : so2_nxt >= 150 && so2_nxt <= 475 ? "bg-moderate" : so2_nxt >= 475 && so2_nxt <= 800 ? "bg-poor" : "bg-bad",
+}
+
+const pm25Object = {
+  "status": pm2_5 >= 0 && pm2_5 <= 35 ? "Good" : pm2_5 >= 35 && pm2_5 <= 75 ? "Fair" : pm2_5 >= 75 && pm2_5 <= 115 ? "Moderate" : pm2_5 >= 115 && pm2_5 <= 150 ? "Poor" : "Severe",
+  "status_nxt": pm2_5_nxt >= 0 && pm2_5_nxt <= 35 ? "Good" : pm2_5_nxt >= 35 && pm2_5_nxt <= 75 ? "Fair" : pm2_5_nxt >= 75 && pm2_5_nxt <= 115 ? "Moderate" : pm2_5_nxt >= 115 && pm2_5_nxt <= 150 ? "Poor" : "Severe",
+  "color": pm2_5 >= 0 && pm2_5 <= 35 ? "bg-good" : pm2_5 >= 35 && pm2_5 <= 75 ? "bg-fair" : pm2_5 >= 75 && pm2_5 <= 115 ? "bg-moderate" : pm2_5 >= 115 && pm2_5 <= 150 ? "bg-poor" : "bg-bad",
+  "color_nxt": pm2_5_nxt >= 0 && pm2_5_nxt <= 35 ? "bg-good" : pm2_5_nxt >= 35 && pm2_5_nxt <= 75 ? "bg-fair" : pm2_5_nxt >= 75 && pm2_5_nxt <= 115 ? "bg-moderate" : pm2_5_nxt >= 115 && pm2_5_nxt <= 150 ? "bg-poor" : "bg-bad",
+}
+
+const nh3Object = {
+  "status": nh3 >= 0 && nh3 <= 200 ? "Good" : nh3 >= 200 && nh3 <= 400 ? "Fair" : nh3 >= 400 && nh3 <= 800 ? "Moderate" : nh3 >= 800 && nh3 <= 1200 ? "Poor" : "Severe",
+  "status_nxt": nh3_nxt >= 0 && nh3_nxt <= 200 ? "Good" : nh3_nxt >= 200 && nh3_nxt <= 400 ? "Fair" : nh3_nxt >= 400 && nh3_nxt <= 800 ? "Moderate" : nh3_nxt >= 800 && nh3_nxt <= 1200 ? "Poor" : "Severe",
+  "color": nh3 >= 0 && nh3 <= 200 ? "bg-good" : nh3 >= 200 && nh3 <= 400 ? "bg-fair" : nh3 >= 400 && nh3 <= 800 ? "bg-moderate" : nh3 >= 800 && nh3 <= 1200 ? "bg-poor" : "bg-bad",
+  "color_nxt": nh3_nxt >= 0 && nh3_nxt <= 200 ? "bg-good" : nh3_nxt >= 200 && nh3_nxt <= 400 ? "bg-fair" : nh3_nxt >= 400 && nh3_nxt <= 800 ? "bg-moderate" : nh3_nxt >= 800 && pm2_5_nxt <= 1200 ? "bg-poor" : "bg-bad",
+}
 
 const aqiResponse =
   aqi === "1"
@@ -49,6 +109,17 @@ const aqiResponse =
     : aqi === "4"
     ? "Poor"
     : "Severe";
+
+  const aqiLevels =
+  aqi === "1"
+    ? "0–50"
+    : aqi === "2"
+    ? "51–100"
+    : aqi === "3"
+    ? "101–150"
+    : aqi === "4"
+    ? "151–200"
+    : "201–300";
 
     const aqiDesc =
   aqi === "1"
@@ -79,7 +150,7 @@ const aqiColor =
 ---
 
 <Layout title="Forsee">
-  <div class="mx-40">
+  <div class="mx-4 lg:mx-10 xl:mx-24 2xl:mx-40">
     {
       arduinoFeed === "1023" ? (
         <div class="flex flex-col text-2xl p-3">
@@ -92,29 +163,102 @@ const aqiColor =
           <div class="flex flex-col justify-start w-1/3"></div>
           <div class="flex flex-col justify-center w-full">
             <div class=" flex flex-col justify-center w-full text-2xl text-center">
-              <span>Air Quality Index</span>
+              <span>Air Pollution Level</span>
             </div>
-            <div class=" py-3 flex flex-col justify-center w-full text-8xl text-center font-medium">
-              <span>{aqi}</span>
+            <div class=" py-4 flex flex-col justify-center w-full text-7xl text-center font-medium">
+              <span>Level {aqi}</span>
             </div>
-            <div class=" flex flex-col justify-center w-full text-3xl text-center">
-              <span>{aqiResponse}</span>
+            <div class=" flex flex-col pt-2 font-medium justify-center w-full text-3xl text-center">
+              <span>AQI {`(${aqiLevels})`}</span>
             </div>
           </div>
           <div class="flex flex-row justify-end">
             <div class="vertical-line h-full border-l-white border mr-14 opacity-30"></div>
-            <div class="flex h-full w-full text-xl  items-center">
-              <span>
+            <div class="flex flex-col h-full w-full text-xl justify-center">
+             <span class="flex justify-start text-3xl py-3">{aqiResponse}</span> 
+              <span class="flex  justify-center  items-center">
               {aqiDesc}
               </span>
               </div>
           </div>
         </div>
-        <div class="py-4">
-          <div class="rounded-xl p-4 bg-neutral-800">
-            PM2
+        <div class="pt-8 pl-2 text-2xl font-semibold"><span>Today</span></div>
+        <div class="py-4 flex flex-row justify-start 2xl:justify-evenly overflow-y-hidden overflow-x-scroll 2xl:overflow-x-hidden">
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4 py-4 px-6 bg-neutral-800 w-max">
+            <div><span>PM</span><sub>2.5</sub><span class="pl-2 text-zinc-400">{`(Particles < 2.5µm)`}</span></div>
+            <div class="py-1"><span class="text-xl">{pm25Object.status}</span><span class={`ml-3 ${pm25Object.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{pm2_5}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NO</span><span class="pl-2 text-zinc-400">{`(Nitric Oxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{noObject.status}</span><span class={`ml-3 ${noObject.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{no}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NO</span><sub>2</sub><span class="pl-2 text-zinc-400">{`(Nitrogen Dioxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{no2Object.status}</span><span class={`ml-3 ${no2Object.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{no2}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NH</span><sub>3</sub><span class="pl-2 text-zinc-400">{`(Ammonia)`}</span></div>
+            <div class="py-1"><span class="text-xl">{nh3Object.status}</span><span class={`ml-3 ${nh3Object.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{nh3}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>O</span><sub>3</sub><span class="pl-2 text-zinc-400">{`(Ozone)`}</span></div>
+            <div class="py-1"><span class="text-xl">{o3Object.status}</span><span class={`ml-3 ${o3Object.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{o3}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>SO</span><sub>2</sub><span class="pl-2 text-zinc-400">{`(Sulfer Dioxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{so2Object.status}</span><span class={`ml-3 ${so2Object.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{so2}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg py-4 px-6 bg-neutral-800 w-max">
+            <div><span>CO</span><span class="pl-2 text-zinc-400">{`(Carbon Monoxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{coObject.status}</span><span class={`ml-3 ${coObject.color} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{co}</span><span class="pl-2 text-zinc-400">mg/m<sup>3</sup></span></div>
           </div>
         </div>
+        <div class="pt-4 pl-2 text-2xl font-semibold"><span>Tomorrow</span></div>
+        <div class="py-4 flex flex-row justify-start 2xl:justify-evenly overflow-y-hidden overflow-x-scroll 2xl:overflow-x-hidden">
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4 py-4 px-6 bg-neutral-800 w-max">
+            <div><span>PM</span><sub>2.5</sub><span class="pl-2 text-zinc-400">{`(Particles < 2.5µm)`}</span></div>
+            <div class="py-1"><span class="text-xl">{pm25Object.status_nxt}</span><span class={`ml-3 ${pm25Object.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{pm2_5_nxt}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NO</span><span class="pl-2 text-zinc-400">{`(Nitric Oxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{noObject.status_nxt}</span><span class={`ml-3 ${noObject.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{no_nxt}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NO</span><sub>2</sub><span class="pl-2 text-zinc-400">{`(Nitrogen Dioxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{no2Object.status_nxt}</span><span class={`ml-3 ${no2Object.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{no2_nxt}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>NH</span><sub>3</sub><span class="pl-2 text-zinc-400">{`(Ammonia)`}</span></div>
+            <div class="py-1"><span class="text-xl">{nh3Object.status_nxt}</span><span class={`ml-3 ${nh3Object.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{nh3_nxt}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>O</span><sub>3</sub><span class="pl-2 text-zinc-400">{`(Ozone)`}</span></div>
+            <div class="py-1"><span class="text-xl">{o3Object.status_nxt}</span><span class={`ml-3 ${o3Object.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{o3_nxt}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg mr-4  py-4 px-6 bg-neutral-800 w-max">
+            <div><span>SO</span><sub>2</sub><span class="pl-2 text-zinc-400">{`(Sulfer Dioxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{so2Object.status_nxt}</span><span class={`ml-3 ${so2Object.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{so2}</span><span class="pl-2 text-zinc-400">μg/m<sup>3</sup></span></div>
+          </div>
+          <div class="rounded-xl border border-neutral-700 font-medium text-lg py-4 px-6 bg-neutral-800 w-max">
+            <div><span>CO</span><span class="pl-2 text-zinc-400">{`(Carbon Monoxide)`}</span></div>
+            <div class="py-1"><span class="text-xl">{coObject.status_nxt}</span><span class={`ml-3 ${coObject.color_nxt} rounded-full hidden 2xl:inline-block h-3 w-3 saturate-150`}></span></div>
+            <div><span class="text-zinc-400">{co_nxt}</span><span class="pl-2 text-zinc-400">mg/m<sup>3</sup></span></div>
+          </div>
+        </div>
+        
       ) : (
         <Error />
       )
