@@ -1,11 +1,11 @@
 ---
-import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
-import Error from "./Error.astro";
 import { Icon } from "astro-icon";
 
 const WEATHER_API_KEY = import.meta.env.WEATHER_API_KEY;
 const LOCATION_API_KEY = import.meta.env.LOCATION_API_KEY;
+
+const date = new Date();
 
 const getArduinoData = await fetch(
   "https://api.thingspeak.com/channels/1688655/fields/1.json?api_key=Z4QAPRBOZFTVUM3K&results=1"
@@ -150,13 +150,16 @@ const aqiColor =
 ---
 
 <Layout title="Forsee">
-  <div class="mx-4 lg:mx-10 xl:mx-24 2xl:mx-40">
+  <div class="mx-4 lg:mx-10 xl:mx-20 2xl:mx-40 mt-20">
     {
       arduinoFeed === "1023" ? (
-        <div class="flex flex-col text-2xl p-3">
+        <div class="flex flex-row justify-between text-2xl p-3">
             <span class="flex flex-row">
               <Icon pack="carbon" name="location-filled" class="w-6 mr-2" />
               {place}
+            </span>
+            <span class="flex flex-row">
+              {date.toDateString()}
             </span>
         </div>
         <div class={`flex justify-between rounded-xl py-14 px-20 ${aqiColor}`}>
@@ -175,7 +178,7 @@ const aqiColor =
           <div class="flex flex-row justify-end">
             <div class="vertical-line h-full border-l-white border mr-14 opacity-30"></div>
             <div class="flex flex-col h-full w-full text-xl justify-center">
-             <span class="flex justify-start text-3xl py-3">{aqiResponse}</span> 
+             <span class="flex justify-start text-3xl font-semibold py-3">{aqiResponse}</span> 
               <span class="flex  justify-center  items-center">
               {aqiDesc}
               </span>
@@ -260,7 +263,9 @@ const aqiColor =
         </div>
         
       ) : (
-        <Error />
+        <div class="flex justify-center items-center">
+          
+        </div>
       )
     }
   </div>
