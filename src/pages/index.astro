@@ -100,24 +100,24 @@ const nh3Object = {
 }
 
 const aqiResponse =
-  aqi === "1"
+  aqi === 1
     ? "Good"
-    : aqi === "2"
+    : aqi === 2
     ? "Fair"
-    : aqi === "3"
+    : aqi === 3
     ? "Moderate"
-    : aqi === "4"
+    : aqi === 4
     ? "Poor"
     : "Severe";
 
   const aqiLevels =
-  aqi === "1"
+  aqi === 1
     ? "0–50"
-    : aqi === "2"
+    : aqi === 2
     ? "51–100"
-    : aqi === "3"
+    : aqi === 3
     ? "101–150"
-    : aqi === "4"
+    : aqi === 4
     ? "151–200"
     : "201–300";
 
