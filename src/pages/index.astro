@@ -1,26 +1,23 @@
 ---
-import react from "@astrojs/react";
-import useState from "@astrojs/react";
-import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import Error from "./Error.astro";
+import { Icon } from "astro-icon";
 
 const WEATHER_API_KEY = import.meta.env.WEATHER_API_KEY;
 const LOCATION_API_KEY = import.meta.env.LOCATION_API_KEY;
 
-const getArduinoData = async () => {
-  const response = await fetch(
-    "https://api.thingspeak.com/channels/1688655/fields/1.json?api_key=Z4QAPRBOZFTVUM3K&results=1"
-  );
-
-  let arduinoData = await response.json();
-  let arduinoFeed = arduinoData.feeds[0].field1.slice(0, 4);
-  return arduinoFeed;
-};
+const getArduinoData = await fetch(
+  "https://api.thingspeak.com/channels/1688655/fields/1.json?api_key=Z4QAPRBOZFTVUM3K&results=1"
+);
+const arduinoData = await getArduinoData.json();
+const arduinoFeed = arduinoData.feeds[0].field1.slice(0, 4);
 
 const userLocation = await fetch(
   `https://api.geoapify.com/v1/ipinfo?&apiKey=${LOCATION_API_KEY}`
 );
 const locationData = await userLocation.json();
+const place = locationData.city.names.en;
 const lat = locationData.location.latitude;
 const lon = locationData.location.longitude;
 
@@ -29,14 +26,100 @@ const OpenWeatherAPI = await fetch(
 );
 const weatherData = await OpenWeatherAPI.json();
 const aqi = weatherData.list[0].main.aqi;
+const aqiComp = weatherData.list[0].components
+
+let {
+  "co": co,
+  "no": no,
+  "no2": no2,
+  "o3": o3,
+  "so2": so2,
+  "pm2.5":pm2_5,
+  "pm10":pm10,
+  "nh3":nh3
+} = aqiComp
+
+const aqiResponse =
+  aqi === "1"
+    ? "Good"
+    : aqi === "2"
+    ? "Fair"
+    : aqi === "3"
+    ? "Moderate"
+    : aqi === "4"
+    ? "Poor"
+    : "Severe";
+
+    const aqiDesc =
+  aqi === "1"
+    ? `Air quality is satisfactory,
+     and air pollution poses little or no risk.`
+    : aqi === "2"
+    ? `Air quality is acceptable. However,
+     there may be a risk for some people,
+     particularly those who are unusually sensitive to air pollution.`
+    : aqi === "3"
+    ? `Members of sensitive groups may experience health effects.
+     The general public is less likely to be affected.`
+    : aqi === "4"
+    ? `Some members of the general public may experience health effects;
+     members of sensitive groups may experience more serious health effects.`
+    : `Health alert: The risk of health effects is increased for everyone.`;
+
+const aqiColor =
+  aqi === "1"
+    ? "bg-good"
+    : aqi === "2"
+    ? "bg-fair"
+    : aqi === "3"
+    ? "bg-moderate"
+    : aqi === "4"
+    ? "bg-poor"
+    : "bg-bad";
 ---
 
-<Layout title="Welcome to Astro.">
-  <main>
-    {getArduinoData()}
-    {aqi}
-    {JSON.stringify("latitude is:" + lat + "\n" + "longitude is:" + lon)}
-  </main>
+<Layout title="Forsee">
+  <div class="mx-40">
+    {
+      arduinoFeed === "1023" ? (
+        <div class="flex flex-col text-2xl p-3">
+            <span class="flex flex-row">
+              <Icon pack="carbon" name="location-filled" class="w-6 mr-2" />
+              {place}
+            </span>
+        </div>
+        <div class={`flex justify-between rounded-xl py-14 px-20 ${aqiColor}`}>
+          <div class="flex flex-col justify-start w-1/3"></div>
+          <div class="flex flex-col justify-center w-full">
+            <div class=" flex flex-col justify-center w-full text-2xl text-center">
+              <span>Air Quality Index</span>
+            </div>
+            <div class=" py-3 flex flex-col justify-center w-full text-8xl text-center font-medium">
+              <span>{aqi}</span>
+            </div>
+            <div class=" flex flex-col justify-center w-full text-3xl text-center">
+              <span>{aqiResponse}</span>
+            </div>
+          </div>
+          <div class="flex flex-row justify-end">
+            <div class="vertical-line h-full border-l-white border mr-14 opacity-30"></div>
+            <div class="flex h-full w-full text-xl  items-center">
+              <span>
+              {aqiDesc}
+              </span>
+              </div>
+          </div>
+        </div>
+        <div class="py-4">
+          <div class="rounded-xl p-4 bg-neutral-800">
+            PM2
+          </div>
+        </div>
+      ) : (
+        <Error />
+      )
+    }
+  </div>
 </Layout>
 
 <style>
