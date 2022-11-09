@@ -1,37 +1,31 @@
-# Welcome to [Astro](https://astro.build)
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![basics](https://user-images.githubusercontent.com/4677417/186188965-73453154-fdec-4d6b-9c34-cb35c248ae5b.png)
+# Welcome to [Forsee](https://aqi.onrender.com)
 
 
-## 🚀 Project Structure
+> It is a web application which **detects** pollutants in the air and **analyzes** and **predicts** the quality of air in the surroundings.
 
-Inside of your Astro project, you'll see the following folders and files:
+![basics](https://raw.githubusercontent.com/sarveshpop/Weather/main/snap.png)
+
+
+## Gases Detected
+
+Our web application detects the μg/m3 of following gases in the surrounding:
 
 ```
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+NO(Nitric Oxide)
+NO2(Nitrogen Dioxide)
+NH3(Ammonia)
+O3(Ozone)
+SO2(Sulfer Dioxide)
+CO(Carbon Monoxide)
+
 ```
+Air quality detection and prediction web application `detects maximum pollutants` in the air and shows the quality of 
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+surrounding air as `levels 1 to 5` where 1 being the best quality of air. It `detects different gases` in the air and shows it's
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+μg/m3. By the 24 hours of data it `predicts the air quality for next day as well.`
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
@@ -40,10 +34,3 @@ All commands are run from the root of the project, from a terminal:
 | `npm install`          | Installs dependencies                              |
 | `npm run dev`          | Starts local dev server at `localhost:3000`        |
 | `npm run build`        | Build your production site to `./dist/`            |
-| `npm run preview`      | Preview your build locally, before deploying       |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro preview` |
-| `npm run astro --help` | Get help using the Astro CLI                       |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
